@@ -12,10 +12,10 @@ import pandas as pd
 from githubdata import GithubData
 from mirutil import funcs as mf
 
+
 repo_url = 'https://github.com/imahdimir/raw-d-listed-firms-in-TSE'
 tic2btic_repo_url = 'https://github.com/imahdimir/d-Ticker-2-BaseTicker-map'
 btics_repo_url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
-
 
 namad = 'نماد'
 btick = 'BaseTicker'
@@ -53,7 +53,7 @@ def main() :
   ##
   msk = df[namad].eq('سابیک1')
   assert len(msk[msk]) <= 1
-  df.loc[msk, namad] = 'سآبیک1'
+  df.loc[msk , namad] = 'سآبیک1'
   ##
 
   tic2btic_repo = GithubData(tic2btic_repo_url)
@@ -77,28 +77,27 @@ def main() :
   bdf = pd.read_parquet(bdfpn)
   bdf = bdf.reset_index()
   ##
-  df = df[[btick, naam]]
+  df = df[[btick , naam]]
   ##
-  bdf = bdf.merge(df, how = 'left')
+  bdf = bdf.merge(df , how = 'left')
   ##
   msk = bdf[cname].notna()
   msk &= bdf[naam].notna()
   msk &= bdf[cname].ne(bdf[naam])
 
-  bdf.loc[msk, 'nsn'] = True
-  bdf.loc[~ msk, 'nsn'] = False
+  bdf.loc[msk , 'nsn'] = True
+  bdf.loc[~ msk , 'nsn'] = False
 
-  bdf.loc[msk, cname] = bdf[naam]
   ##
   msk = bdf[cname].isna()
+  bdf.loc[msk , cname] = bdf[naam]
 
-  bdf.loc[msk, cname] = bdf[naam]
   ##
   msk = bdf[cname].isna()
   df2 = bdf[msk]
 
   ##
-  bdf = bdf[[btick, cname]]
+  bdf = bdf[[btick , cname]]
   bdf = bdf.set_index(btick)
   ##
   bdf.to_parquet(bdfpn)
@@ -112,10 +111,6 @@ def main() :
   tic2btic_repo.rmdir()
 
   ##
-
-
-
-
 
 
   ##
